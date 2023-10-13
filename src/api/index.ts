@@ -6,7 +6,25 @@ Use the default fetch API.
 (Optional) Use JSDoc to document the functions.
 */
 
-export const me = async (): Promise<any> => {
+export type User = {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  masked_phone: string;
+  address: Address;
+  shipping: {name: string; address: Address};
+};
+
+type Address = {
+  city: string;
+  country: string;
+  line1: string;
+  postal_code: string;
+  state: string;
+};
+
+export const me = async (): Promise<User> => {
   // GET https://us-central1-internals-358114.cloudfunctions.net/react-challenge/me
   const response = await fetch(
     'https://us-central1-internals-358114.cloudfunctions.net/react-challenge/me',
@@ -19,6 +37,7 @@ export const me = async (): Promise<any> => {
 
   if (response.ok) {
     const userData = await response.json();
+    console.log('userData', userData);
     return userData;
   } else {
     throw new Error('Error retrieving user data');
