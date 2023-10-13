@@ -25,6 +25,21 @@ export const me = async (): Promise<any> => {
   }
 };
 
-export const phone = () => {
+export const phone = async (): Promise<{phone: string}> => {
   // GET https://us-central1-internals-358114.cloudfunctions.net/react-challenge/phone
+  const response = await fetch(
+    'https://us-central1-internals-358114.cloudfunctions.net/react-challenge/phone',
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.REACT_APP_BEARER_TOKEN}`,
+      },
+    }
+  );
+
+  if (response.ok) {
+    const userPhoneNumber = await response.json();
+    return userPhoneNumber;
+  } else {
+    throw new Error('Error retrieving user phone number');
+  }
 };
