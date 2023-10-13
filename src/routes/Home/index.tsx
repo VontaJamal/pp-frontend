@@ -11,6 +11,7 @@ import {UserProvider, useUser} from '@providers';
 
 const phoneStyle = {
   display: 'flex',
+  gap: 10,
 };
 
 const Card = () => {
@@ -38,6 +39,9 @@ const homeStyle = {
   backgroundColor: Theme.colors.beige,
   width: '100vw',
   height: '100vh',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 };
 
 const Home = () => {
