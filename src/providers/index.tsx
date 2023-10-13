@@ -12,12 +12,31 @@ const UserContext = React.createContext(null);
 
 interface UserProviderProps {
   children: React.ReactNode;
-};
+}
 
-export const UserProvider = (props) => {
-  return null;
+export const UserProvider = ({children}: UserProviderProps) => {
+  const [user, setUser] = React.useState(null);
+
+  React.useEffect(() => {
+    if (!user) {
+      fetchUserData();
+    }
+
+    async function fetchUserData() {
+      const userData = await API.me();
+      setUser(userData);
+    }
+  }, []);
+
+  const value = {user};
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 
 export const useUser = () => {
-  //
+  const context = React.useContext(UserContext);
+  if (!context) {
+    throw new Error('useUser must be called within a UserContext provider');
+  }
+  return context;
 };
