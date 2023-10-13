@@ -14,6 +14,8 @@ interface UserProviderProps {
   children: React.ReactNode;
 }
 
+const userCache = {};
+
 export const UserProvider = ({children}: UserProviderProps) => {
   const [user, setUser] = React.useState(null);
   const [showPhoneNumber, setShowPhoneNumber] = React.useState(false);
@@ -33,14 +35,17 @@ export const UserProvider = ({children}: UserProviderProps) => {
 
   React.useEffect(() => {
     if (showPhoneNumber) {
-      fetchPhoneNumber();
+      userCache[user.id]
+        ? setDisplayedNumber(userCache[user.id])
+        : fetchPhoneNumber();
     } else {
       setDisplayedNumber(user?.masked_phone);
     }
 
     async function fetchPhoneNumber() {
-      const phoneNumber = await API.phone();
-      setDisplayedNumber(phoneNumber.phone);
+      const {phone} = await API.phone();
+      userCache[user.id] = phone;
+      setDisplayedNumber(phone);
     }
   }, [showPhoneNumber]);
 
