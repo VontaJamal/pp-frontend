@@ -16,6 +16,8 @@ interface UserProviderProps {
 
 export const UserProvider = ({children}: UserProviderProps) => {
   const [user, setUser] = React.useState(null);
+  const [showPhoneNumber, setShowPhoneNumber] = React.useState(false);
+  const [displayedNumber, setDisplayedNumber] = React.useState('');
 
   React.useEffect(() => {
     if (!user) {
@@ -25,10 +27,28 @@ export const UserProvider = ({children}: UserProviderProps) => {
     async function fetchUserData() {
       const userData = await API.me();
       setUser(userData);
+      setDisplayedNumber(userData.masked_phone);
     }
   }, []);
 
-  const value = {user};
+  React.useEffect(() => {
+    if (showPhoneNumber) {
+      fetchPhoneNumber();
+    } else {
+      setDisplayedNumber(user?.masked_phone);
+    }
+
+    async function fetchPhoneNumber() {
+      const phoneNumber = await API.phone();
+      setDisplayedNumber(phoneNumber.phone);
+    }
+  }, [showPhoneNumber]);
+
+  function togglePhoneDisplay() {
+    setShowPhoneNumber((show) => !show);
+  }
+
+  const value = {user, togglePhoneDisplay, displayedNumber, showPhoneNumber};
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

@@ -14,18 +14,21 @@ const phoneStyle = {
 };
 
 const Card = () => {
-  const {user} = useUser();
+  const {user, togglePhoneDisplay, displayedNumber, showPhoneNumber} =
+    useUser();
 
   if (!user) return;
-  const {first_name, last_name, email, masked_phone} = user;
+  const {first_name, last_name, email} = user;
 
   return (
     <div id='card'>
       <p>{`${first_name} ${last_name}`}</p>
       <p>{`${email}`}</p>
       <div style={phoneStyle}>
-        <p>{`${masked_phone}`}</p>
-        <button onClick={() => {}}>Unmask Phone Number</button>
+        <p>{`${displayedNumber}`}</p>
+        <button onClick={togglePhoneDisplay}>
+          {showPhoneNumber ? 'Mask Phone Number' : 'Unmask Phone Number'}
+        </button>
       </div>
     </div>
   );
